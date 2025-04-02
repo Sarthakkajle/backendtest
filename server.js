@@ -4,20 +4,21 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3090; // Use dynamic port
+const PORT = process.env.PORT || 3090;
 
 // Middleware to parse form data
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Serve static files (like your HTML)
-app.use(express.static('public'));
+// Serve index.html directly at the root route
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // Route to handle form submission
 app.post('/save-data', (req, res) => {
     const name = req.body.name;
     const data = `Name: ${name}\nSubmitted on: ${new Date().toLocaleString()}\n\n`;
 
-    // Append data to file
     fs.appendFile('form-data.txt', data, (err) => {
         if (err) {
             console.error(err);
